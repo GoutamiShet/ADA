@@ -1,55 +1,53 @@
 #include<stdio.h>
 #include<stdlib.h>
-#include<time.h>
-void merge(int a[],int low,int mid,int high){
-int i=low,j=mid+1,k=low;
-int c[1000000];
-while(i<=mid && j<=high){
-if(a[i]<a[j]){
-c[k]=a[i];
-i++;
+#define MAX 20
+int x[MAX];
+int s[MAX];
+int d,flag=0;
+void SumofSub(int m,int k,int r){
+int i;
+x[k]=1;
+if(m+s[k]==d){
+flag=1;
+printf("{");
+for(i=1;i<=k;i++){
+if(x[i]==1){
+printf("%d",s[i]);
+}
+}
+printf("}\n");
+}
+else if((m+s[k]+s[k+1])<=d){
+SumofSub(m+s[k],k+1,r-s[k]);
+}
+if((m+r-s[k]>=d)&&(m+s[k+1]<=d)){
+x[k]=0;
+SumofSub(m,k+1,r-s[k]);
+}
+}
+int main(){
+int n,i,sum=0;
+printf("enter the no of elements");
+scanf("%d",&n);
+printf("enter the elements\n");
+for(i=1;i<=n;i++){
+scanf("%d",&s[i]);
+}
+printf("enter the value of d:");
+scanf("%d",&d);
+for(i=1;i<=n;i++){
+sum+=s[i];
+}
+if(sum<d || s[i]>d){
+printf("the given problem instance does not have a solution\n");
+return 0;
 }
 else{
-c[k]=a[j];
-j++;
+printf("subsets are:\n");
+SumofSub(0,1,sum);
 }
-k++;
+if(flag==0){
+printf("no subset possible\n");
 }
-while(i<=mid){
-c[k++]=a[i++];
-}
-while(j<=high){
-c[k++]=a[j++];
-}
-for(i=low;i<=high;i++){
-a[i]=c[i];
-}
-}
-void mergeSort(int a[],int low,int high){
-if(low<high){
-int mid=low+(high-low)/2;
-mergeSort(a,low,mid);
-mergeSort(a,mid+1,high);
-merge(a,low,mid,high);
-}}
-int main(){
-int n,i;
-printf("enter the value of n:");
-scanf("%d",&n);
-int a[n];
-//printf("enter the array elements");
-srand(time(NULL));
-for(i=0;i<n;i++){
-a[i]=rand()%100000;
-}
-clock_t start=clock();
-mergeSort(a,0,n-1);
-clock_t end=clock();
-double timetaken=((double)(end-start))/CLOCKS_PER_SEC;
-printf("the time taken is %f\n",timetaken);
-printf("array after sorting is\n");
-/*for(i=0;i<n;i++){
-printf("%d ",a[i]);
-}*/
 return 0;
 }
